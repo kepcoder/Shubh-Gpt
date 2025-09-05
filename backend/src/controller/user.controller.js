@@ -21,13 +21,13 @@ const userRegisterController = async (req, res)=>{
         password: await bcrypt.hash(password, 10)
     }) 
 
-    await chatModel.create({user:user._id, title:'First_Chat'})
+    await chatModel.create({user:newUser._id, title:'First_Chat'})
 
     res.status(201).json({msg:'User Register Successfully'})
 
 
   }catch(err){
-    return res.json({msg:"Some error...Try to register again"})
+    return res.json({msg:'Some error Try to login again...'})
   }
 
 }
