@@ -6,7 +6,7 @@ const authRouter = require('./routes/auth.route')
 const chatRoute = require('./routes/chat.route')
 const dbConnection = require('./db/db')
 var cookieParser = require('cookie-parser')
-
+const path = require('path')
 
 
 app.use(cors({
@@ -16,8 +16,13 @@ app.use(cors({
 app.use(express.json())
 app.use(cookieParser())
 dbConnection()
+app.use(express.static(path.join(__dirname, '../public')))
 
 app.use('/user', authRouter )
 app.use('/user', chatRoute)
 
+
+app.get('*name', (req,res)=>{
+    res.sendFile(path.join(__dirname, '../public/index.html'))
+})
 module.exports = app
