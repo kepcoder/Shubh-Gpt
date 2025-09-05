@@ -41,7 +41,7 @@ export default function LoginPage() {
 
   const onSubmit = async (data) => {
     try{
-      const res = await axios.post('http://localhost:3000/user/login', data , { withCredentials: true })
+      const res = await axios.post('https://shubh-gpt.onrender.com/user/login', data , { withCredentials: true })
       console.log(res.data.msg)
       MySwal.fire({
        title: "Login Successfull!",

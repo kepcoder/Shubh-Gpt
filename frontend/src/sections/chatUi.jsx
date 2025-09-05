@@ -45,7 +45,6 @@ export default function ChatUi() {
 
     setIsTyping(true);
 
-
     reset();
     setTimeout(() => setValue("message", ""), 0);
   };
@@ -55,7 +54,7 @@ export default function ChatUi() {
     if (!newChatName.trim()) return;
     try {
       await axios.post(
-        "http://localhost:3000/user/chat",
+        "https://shubh-gpt.onrender.com/user/chat",
         { title: newChatName },
         { withCredentials: true }
       );
@@ -71,7 +70,7 @@ export default function ChatUi() {
   // Reusable fetchChat function
   const fetchChat = useCallback(async () => {
     try {
-      const res = await axios.get("http://localhost:3000/user/chat", {
+      const res = await axios.get("https://shubh-gpt.onrender.com/user/chat", {
         withCredentials: true,
       });
 
@@ -89,9 +88,12 @@ export default function ChatUi() {
   // Reusable FetchMessages function
   const fetchMessages = useCallback(async (chatId) => {
     try {
-      const res = await axios.get(`http://localhost:3000/user/${chatId}`, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        `https://shubh-gpt.onrender.com/user/${chatId}`,
+        {
+          withCredentials: true,
+        }
+      );
       res.data.map((elem) => {
         setMessages((prev) => ({
           ...prev,
@@ -110,7 +112,7 @@ export default function ChatUi() {
   useEffect(() => {
     fetchChat();
     try {
-      const tempSocket = io("http://localhost:3000", {
+      const tempSocket = io("https://shubh-gpt.onrender.com", {
         withCredentials: true,
       });
       tempSocket.on("ai-response", (data) => {
@@ -121,7 +123,6 @@ export default function ChatUi() {
         }));
 
         setIsTyping(false);
-
       });
       setSocket(tempSocket);
     } catch (err) {
@@ -208,83 +209,82 @@ export default function ChatUi() {
         </div>
 
         {/* Chat messages */}
-<div
-  ref={messagesRef}
-  className="flex-1 overflow-y-auto p-2 md:p-4 pt-5 pb-24"
->
-  {(messages[activeChat] || []).length === 0 ? (
-    // 👉 Intro screen
-    <div className="h-full flex flex-col items-center justify-center text-center text-slate-600 dark:text-slate-300">
-      <h1 className="text-2xl font-bold mb-2">Shubh GPT</h1>
-      <p>Best for coders, Content Creators & researchers</p>
-    </div>
-  ) : (
-    <>
-      {(messages[activeChat] || []).map((msg, i) => (
         <div
-          key={i}
-          className={`mb-4 px-2 flex w-full ${
-            msg.role === "user" ? "justify-end" : "justify-start"
-          }`}
+          ref={messagesRef}
+          className="flex-1 overflow-y-auto p-2 md:p-4 pt-5 pb-24"
         >
-          <div
-            className={`p-3 rounded-lg break-words whitespace-pre-wrap
+          {(messages[activeChat] || []).length === 0 ? (
+            // 👉 Intro screen
+            <div className="h-full flex flex-col items-center justify-center text-center text-slate-600 dark:text-slate-300">
+              <h1 className="text-2xl font-bold mb-2">Shubh GPT</h1>
+              <p>Best for coders, Content Creators & researchers</p>
+            </div>
+          ) : (
+            <>
+              {(messages[activeChat] || []).map((msg, i) => (
+                <div
+                  key={i}
+                  className={`mb-4 px-2 flex w-full ${
+                    msg.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <div
+                    className={`p-3 rounded-lg break-words whitespace-pre-wrap
               ${
                 msg.role === "user"
                   ? "bg-emerald-600 text-white w-fit max-w-[75%] xs:max-w-[85%] sm:max-w-2xl"
                   : "bg-slate-900 text-slate-100 w-full sm:w-fit sm:max-w-2xl"
               }`}
-          >
-            <ReactMarkdown
-              remarkPlugins={[remarkGfm]}
-              components={{
-                code({ inline, className, children, ...props }) {
-                  const match = /language-(\w+)/.exec(className || "");
-                  return !inline ? (
-                    <div className="w-full max-w-full overflow-x-auto rounded-lg my-2 text-sm md:text-base">
-                      <SyntaxHighlighter
-                        style={oneDark}
-                        language={match ? match[1] : "javascript"}
-                        PreTag="div"
-                        wrapLongLines={true}
-                        customStyle={{
-                          whiteSpace: "pre-wrap",
-                          wordBreak: "break-word",
-                        }}
-                        {...props}
-                      >
-                        {String(children).replace(/\n$/, "")}
-                      </SyntaxHighlighter>
-                    </div>
-                  ) : (
-                    <code className="bg-gray-800 px-1 py-0.5 rounded text-xs md:text-sm">
-                      {children}
-                    </code>
-                  );
-                },
-              }}
-            >
-              {msg.text}
-            </ReactMarkdown>
-          </div>
-        </div>
-      ))}
+                  >
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        code({ inline, className, children, ...props }) {
+                          const match = /language-(\w+)/.exec(className || "");
+                          return !inline ? (
+                            <div className="w-full max-w-full overflow-x-auto rounded-lg my-2 text-sm md:text-base">
+                              <SyntaxHighlighter
+                                style={oneDark}
+                                language={match ? match[1] : "javascript"}
+                                PreTag="div"
+                                wrapLongLines={true}
+                                customStyle={{
+                                  whiteSpace: "pre-wrap",
+                                  wordBreak: "break-word",
+                                }}
+                                {...props}
+                              >
+                                {String(children).replace(/\n$/, "")}
+                              </SyntaxHighlighter>
+                            </div>
+                          ) : (
+                            <code className="bg-gray-800 px-1 py-0.5 rounded text-xs md:text-sm">
+                              {children}
+                            </code>
+                          );
+                        },
+                      }}
+                    >
+                      {msg.text}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              ))}
 
-      {/* 👉 Typing Indicator */}
-      {isTyping && activeChat && (
-        <div className="mb-4 px-2 flex w-full justify-start">
-          <div className="bg-slate-900 text-slate-100 p-3 rounded-lg flex items-center space-x-1">
-            <h2>Thinking</h2>
-            <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
-            <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-            <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
-          </div>
+              {/* 👉 Typing Indicator */}
+              {isTyping && activeChat && (
+                <div className="mb-4 px-2 flex w-full justify-start">
+                  <div className="bg-slate-900 text-slate-100 p-3 rounded-lg flex items-center space-x-1">
+                    <h2>Thinking</h2>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                    <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                  </div>
+                </div>
+              )}
+            </>
+          )}
         </div>
-      )}
-    </>
-  )}
-</div>
-
 
         {/* Chat input (Always at bottom) */}
         <div className="sticky bottom-0 left-0 right-0 flex justify-center px-4 pb-4 bg-[#212121]">

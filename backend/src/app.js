@@ -10,7 +10,7 @@ var cookieParser = require('cookie-parser')
 
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin:[ "http://localhost:5173", "https://shubh-gpt.onrender.com/"],
     credentials: true
 }))
 app.use(express.json())

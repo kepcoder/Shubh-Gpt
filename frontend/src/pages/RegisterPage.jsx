@@ -43,7 +43,7 @@ export default function Register() {
     const MySwal = withReactContent(Swal);
 
     try{
-      const res = await axios.post('http://localhost:3000/user/register', data) 
+      const res = await axios.post('https://shubh-gpt.onrender.com/user/register', data) 
       MySwal.fire({
        title: "User Registered!",
        text: "You can now login",
